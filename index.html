@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<!-- custom -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fresco ($FRESCO) on Solana · smiling through it since forever</title>
+<meta name="description" content="Fresco, the red grinning office frog in the light-blue shirt and tie. Ride the elevator from the lobby to the penthouse. $FRESCO on Solana.">
+<meta property="og:title" content="Fresco ($FRESCO)">
+<meta property="og:description" content="Smiling through it since forever. The grinning wagie, from the lobby to the C-suite. $FRESCO on Solana.">
+<meta property="og:image" content="banner.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#e8262a">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --shirt:#a9d9ec; --shirt-d:#6fb5d6; --tie:#2f8fd8;
+  --beige:#e8dcc2; --beige-d:#cbb995; --beige-dd:#a99772;
+  --red:#e8262a; --red-d:#b3161b; --tooth:#ffe23d; --lip:#b8e33c;
+  --pepe:#4f9a3a; --pepe-d:#2f6b25; --gt:#4c7a12;
+  --ink:#1c1d22; --steel:#bfc5cc; --steel-d:#7c858f; --paper:#fffdf6;
+  --panel-h:64px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:#16171b;color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+h1,h2,h3{font-family:"Archivo Black",Inter,sans-serif;font-weight:400;line-height:1.02;margin:0}
+
+/* ===== fixed elevator panel ===== */
+.panel{position:fixed;inset:0 0 auto 0;height:var(--panel-h);z-index:50;display:flex;align-items:center;gap:14px;padding:0 clamp(10px,2vw,22px);
+  background:linear-gradient(180deg,#d9dee3 0%,#aeb6be 48%,#959ea8 52%,#c3c9cf 100%);border-bottom:3px solid #6c747d;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.panel::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 1px,transparent 1px 3px);pointer-events:none}
+.disp{position:relative;display:flex;align-items:center;gap:8px;background:#0b0c0e;border:2px solid #4b525a;border-radius:8px;padding:4px 12px 4px 10px;box-shadow:inset 0 0 14px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.6);min-width:132px}
+.arrow{font:22px/1 "Share Tech Mono",monospace;color:#3a1410;transition:color .2s,text-shadow .2s}
+.arrow.on{color:#ff5a3c;text-shadow:0 0 8px #ff3b1f}
+.digits{position:relative;font:34px/1 "Share Tech Mono",monospace;letter-spacing:.06em;width:3.1ch;text-align:right}
+.digits .ghost{position:absolute;inset:0;color:#2a0f0b}
+.digits .num{position:relative;color:#ff5a3c;text-shadow:0 0 10px rgba(255,70,40,.85),0 0 2px #ffb199}
+.fname{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.fname small{font:11px/1 "Share Tech Mono",monospace;letter-spacing:.2em;color:#3d444c}
+.fname b{font:15px/1.2 "Archivo Black",sans-serif;color:#22262b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btns{margin-left:auto;display:flex;gap:8px;align-items:center}
+.fb{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;text-decoration:none;font:13px/1 "Share Tech Mono",monospace;color:#2b3036;
+  background:radial-gradient(circle at 40% 35%,#f4f6f8,#b9c0c7 70%);border:2px solid #7d858e;box-shadow:0 2px 0 #5d656e,inset 0 -2px 3px rgba(0,0,0,.15);transition:box-shadow .2s,color .2s}
+.fb.lit{color:#fff;box-shadow:0 0 0 2px #ffcf3d,0 0 14px 3px rgba(255,207,61,.85),inset 0 0 8px rgba(255,180,0,.8);background:radial-gradient(circle at 40% 35%,#fff2b8,#f2b200 75%)}
+.fb:focus-visible,.ding:focus-visible{outline:3px solid var(--tie);outline-offset:2px}
+.ding{display:flex;align-items:center;gap:6px;height:40px;padding:0 12px;border-radius:20px;border:2px solid #7d858e;background:#2a2e34;color:#9aa3ad;font:12px/1 "Share Tech Mono",monospace;letter-spacing:.08em}
+.ding[aria-pressed="true"]{color:#ffe23d;border-color:#ffcf3d;box-shadow:0 0 10px rgba(255,207,61,.5)}
+.ding svg{width:16px;height:16px}
+
+/* ===== fixed sky / city backdrop ===== */
+.sky{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:linear-gradient(180deg,#6fc2ee 0%,#a9dcf4 55%,#e4f5fb 100%)}
+.sky>*{position:absolute;will-change:transform,opacity}
+#dusk{inset:0;opacity:0;background:linear-gradient(180deg,#1f1747 0%,#5b2a6e 28%,#c2456e 52%,#ff8a4c 72%,#ffd27a 100%)}
+#sun{width:40vmin;height:40vmin;left:4%;top:30%;border-radius:50%;opacity:0;background:radial-gradient(circle,#fff6c9 0%,#ffd24a 45%,rgba(255,150,60,.0) 72%)}
+.city{left:0;width:100%;bottom:0;height:78vh}
+.city svg{width:100%;height:100%;display:block}
+#cityFar{opacity:.7}
+#cityNear .lw{opacity:var(--lit,0)}
+.puffs{left:-10%;width:120%;height:46vh;background:
+  radial-gradient(closest-side,#fff 60%,rgba(255,255,255,0)) 4% 60%/22% 46% no-repeat,
+  radial-gradient(closest-side,#fff 60%,rgba(255,255,255,0)) 18% 40%/26% 60% no-repeat,
+  radial-gradient(closest-side,#fff 60%,rgba(255,255,255,0)) 36% 64%/24% 44% no-repeat,
+  radial-gradient(closest-side,#fff 60%,rgba(255,255,255,0)) 52% 36%/30% 62% no-repeat,
+  radial-gradient(closest-side,#fff 60%,rgba(255,255,255,0)) 70% 62%/24% 46% no-repeat,
+  radial-gradient(closest-side,#fff 60%,rgba(255,255,255,0)) 86% 42%/28% 60% no-repeat,
+  radial-gradient(closest-side,#fff 60%,rgba(255,255,255,0)) 100% 66%/22% 44% no-repeat}
+#cloudsHi{top:4vh;opacity:.85;height:30vh}
+#cloudSea{bottom:-8vh;height:52vh;filter:drop-shadow(0 -8px 20px rgba(255,140,90,.35))}
+#cloudSea::after{content:"";position:absolute;inset:55% 0 0 0;background:#fff}
+#cloudTint{inset:0;mix-blend-mode:multiply;opacity:0;background:linear-gradient(180deg,transparent 40%,#ffb38a 75%,#d07aa0 100%)}
+
+/* ===== the shaft ===== */
+main{position:relative;z-index:1;padding-top:var(--panel-h)}
+.hoist{position:relative;height:clamp(140px,26vh,260px);background:
+  linear-gradient(90deg,transparent calc(30% - 2px),#2c2f34 calc(30% - 2px),#585e66 30%,#2c2f34 calc(30% + 2px),transparent calc(30% + 2px)),
+  linear-gradient(90deg,transparent calc(70% - 2px),#2c2f34 calc(70% - 2px),#585e66 70%,#2c2f34 calc(70% + 2px),transparent calc(70% + 2px)),
+  repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 2px,transparent 2px 44px),
+  linear-gradient(90deg,#1b1c20,#26282d 50%,#1b1c20);overflow:hidden}
+.hoist::before,.hoist::after{content:"";position:absolute;left:0;right:0;height:14px;background:repeating-linear-gradient(-45deg,#f2c200 0 14px,#1b1c20 14px 28px);opacity:.9}
+.hoist::before{top:0}.hoist::after{bottom:0}
+.hoist .stencil{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:clamp(44px,9vw,110px)/1 "Archivo Black",sans-serif;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.14);letter-spacing:.04em;white-space:nowrap}
+.hoist .stencil small{display:block;font:12px/1.4 "Share Tech Mono",monospace;-webkit-text-stroke:0;color:rgba(255,255,255,.28);letter-spacing:.35em;text-align:center}
+.hoist .rail{position:absolute;top:0;bottom:0;width:10px;background:linear-gradient(90deg,#3d4148,#6a7079,#3d4148)}
+.hoist .rail.l{left:6%}.hoist .rail.r{right:6%}
+
+.floor{position:relative;border:clamp(8px,1.3vw,18px) solid #b0b8c0;border-image:linear-gradient(90deg,#8a939c,#d5dade 25%,#a9b1b9 50%,#d5dade 75%,#8a939c) 1}
+.floor::before{content:attr(data-label);position:absolute;top:0;left:50%;transform:translate(-50%,-50%);z-index:8;background:#0b0c0e;color:#ff5a3c;font:13px/1 "Share Tech Mono",monospace;letter-spacing:.2em;padding:6px 12px;border-radius:4px;border:2px solid #4b525a;text-shadow:0 0 6px rgba(255,70,40,.8);white-space:nowrap}
+.room{position:relative;overflow:hidden;border-radius:4px;isolation:isolate;box-shadow:inset 0 0 0 2px rgba(0,0,0,.35)}
+.win{position:absolute;left:5%;right:5%;top:12%;height:34%;z-index:0;box-shadow:0 0 0 300vmax var(--wall,#e8dcc2);border:10px solid #5b636c;border-radius:2px;
+  background:repeating-linear-gradient(90deg,transparent 0 calc(16.66% - 8px),#5b636c calc(16.66% - 8px) 16.66%)}
+.win::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.22) 0 12%,transparent 12% 30%,rgba(255,255,255,.12) 30% 36%,transparent 36%)}
+.ceil{position:absolute;left:-2%;right:-2%;top:-40px;height:110px;z-index:1;background:
+  linear-gradient(90deg,#d6d6cf 0 3px,transparent 3px) 0 0/120px 100%,
+  linear-gradient(0deg,#d6d6cf 0 3px,transparent 3px) 0 0/100% 55px,#efefe9;border-bottom:4px solid #c9c9c1}
+.tubes{position:absolute;left:0;right:0;bottom:16px;display:flex;justify-content:space-around}
+.tube{width:clamp(70px,12vw,160px);height:14px;border-radius:7px;background:#fffef0;box-shadow:0 0 18px 6px rgba(255,255,230,.75),0 22px 60px 10px rgba(255,255,225,.28)}
+.tube.flick{animation:flick 7s infinite steps(1)}
+.tube.flick.b{animation-duration:11s;animation-delay:-3s}
+@keyframes flick{0%,100%{opacity:1}61%{opacity:.25}62%{opacity:1}63%{opacity:.15}64%{opacity:.9}66%{opacity:.3}67%{opacity:1}88%{opacity:.6}89%{opacity:1}}
+.carpet{position:absolute;left:0;right:0;bottom:0;height:16%;z-index:0;background:repeating-linear-gradient(45deg,rgba(0,0,0,.05) 0 3px,transparent 3px 7px),var(--carpet,#7b7f86);border-top:8px solid var(--base,#cfc4ad)}
+.prop{position:absolute;z-index:2;pointer-events:none}
+.prop svg{width:100%;height:100%;display:block;overflow:visible}
+.content{position:relative;z-index:4;padding:clamp(96px,12vw,140px) clamp(16px,5vw,72px) clamp(70px,9vw,120px);max-width:1240px;margin:0 auto}
+.fore{position:absolute;left:-2%;right:-2%;bottom:-60px;height:150px;z-index:3;display:flex;pointer-events:none}
+.cube{flex:1;margin:0 2px;border-radius:6px 6px 0 0;border-top:10px solid #8f969e;background:repeating-linear-gradient(0deg,rgba(0,0,0,.04) 0 2px,transparent 2px 5px),linear-gradient(180deg,#d9cbad,#bfae8b)}
+.cube:nth-child(odd){transform:translateY(16px)}
+
+.doors{position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden}
+.door{position:absolute;top:0;bottom:0;width:50.5%;will-change:transform;
+  background:linear-gradient(90deg,rgba(255,255,255,.18),rgba(0,0,0,.08) 40%,rgba(255,255,255,.14) 60%,rgba(0,0,0,.12)),repeating-linear-gradient(90deg,#c4cad0 0 2px,#b1b8bf 2px 3px,#cbd1d6 3px 5px);box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
+.door.l{left:0;border-right:2px solid #6b737c}
+.door.r{right:0;border-left:2px solid #e7ebee}
+.door span{position:absolute;top:50%;transform:translateY(-50%);font:clamp(60px,12vw,170px)/1 "Archivo Black",sans-serif;color:rgba(70,78,88,.22);letter-spacing:-.02em}
+.door.l span{right:6%}.door.r span{left:6%}
+.door.l::after,.door.r::after{content:"";position:absolute;top:50%;width:6px;height:120px;transform:translateY(-50%);background:#8d959e;border-radius:3px}
+.door.l::after{right:14px}.door.r::after{left:14px}
+
+/* ===== shared bits ===== */
+.kicker{font:13px/1.2 "Share Tech Mono",monospace;letter-spacing:.22em;text-transform:uppercase}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:10px;border:3px solid var(--ink);font:16px/1 "Archivo Black",sans-serif;text-decoration:none;color:var(--ink);background:var(--tooth);box-shadow:5px 5px 0 var(--ink);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+.btn.red{background:var(--red);color:#fff}
+.btn:focus-visible{outline:3px solid var(--tie);outline-offset:3px}
+.ca{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ca code{font:15px/1.3 "Share Tech Mono",monospace;word-break:break-all;flex:1;min-width:0}
+.copy{border:2px solid var(--ink);background:#fff;border-radius:6px;padding:7px 12px;font:12px/1 "Share Tech Mono",monospace;letter-spacing:.1em}
+.copy:hover{background:var(--tooth)}
+
+/* ===== F1 lobby ===== */
+#f1 .room{--wall:#e9e2d3;--carpet:#d8d2c4;--base:#a99c80;min-height:calc(100vh - var(--panel-h) - 36px)}
+#f1 .win{top:7%;height:66%;left:3%;right:3%}
+#f1 .carpet{height:22%;background:linear-gradient(90deg,rgba(0,0,0,.06) 1px,transparent 1px) 0 0/90px 100%,linear-gradient(0deg,rgba(0,0,0,.06) 1px,transparent 1px) 0 0/100% 40px,linear-gradient(180deg,#e8e3d8,#cfc7b6)}
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(16px,4vw,60px);align-items:center;min-height:calc(100vh - var(--panel-h) - 200px)}
+.hero h1{font-size:clamp(54px,8.6vw,140px);color:var(--red);letter-spacing:-.02em;-webkit-text-stroke:3px var(--ink);text-shadow:6px 6px 0 var(--ink),10px 10px 0 var(--tooth)}
+.hero .kicker{display:inline-block;background:var(--ink);color:#fff;padding:7px 12px;border-radius:4px;margin-bottom:18px}
+.tag{display:inline-block;margin:18px 0 22px;background:var(--tooth);border:3px solid var(--ink);padding:8px 16px;font:clamp(18px,2.3vw,26px)/1.2 "Archivo Black",sans-serif;transform:rotate(-1.5deg);box-shadow:4px 4px 0 var(--ink)}
+.hero p.lede{font-size:clamp(16px,1.5vw,19px);max-width:34em;background:rgba(255,253,246,.92);border-radius:10px;padding:12px 16px;margin:0 0 22px;border:2px solid rgba(0,0,0,.12)}
+.badge{position:relative;max-width:470px;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:16px 18px 14px;box-shadow:6px 6px 0 rgba(0,0,0,.25);margin-bottom:24px}
+.badge::before{content:"";position:absolute;top:-34px;left:50%;width:22px;height:40px;transform:translateX(-50%);border:5px solid var(--tie);border-bottom:0;border-radius:12px 12px 0 0}
+.badge::after{content:"";position:absolute;top:8px;left:50%;width:46px;height:8px;transform:translateX(-50%);background:#ddd;border-radius:4px;box-shadow:inset 0 1px 2px rgba(0,0,0,.3)}
+.badge .bh{display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px;font:12px/1 "Share Tech Mono",monospace;letter-spacing:.18em}
+.badge .bh b{background:var(--red);color:#fff;padding:4px 8px;border-radius:3px}
+.cta{display:flex;flex-wrap:wrap;gap:14px}
+.desk-wrap{position:relative;justify-self:center;width:min(100%,520px);padding-bottom:30px}
+.fresco{position:relative;display:block;width:100%;border:0;background:none;padding:0;transform-origin:50% 100%}
+.fresco:focus-visible{outline:3px dashed var(--tie);outline-offset:6px}
+.fresco img{width:100%;height:auto;user-select:none;-webkit-user-drag:none}
+.fresco .grin{position:absolute;left:17.65%;top:32.35%;width:63.97%;height:auto;transform-origin:8% 50%;transition:transform .35s cubic-bezier(.3,1.8,.5,1)}
+.fresco.shake{animation:shake .35s}
+@keyframes shake{25%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}75%{transform:rotate(-1deg)}}
+.bob{animation:bob 4.5s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.desk{position:absolute;left:-6%;right:-6%;bottom:30px;height:24%;z-index:2;border-radius:10px 10px 0 0;background:linear-gradient(180deg,#8a5a34 0 16px,#5d3a1f 16px 20px,#2e3238 20px);border:3px solid var(--ink);box-shadow:0 18px 30px rgba(0,0,0,.25)}
+.desk b{position:absolute;left:0;right:0;top:42%;text-align:center;font:clamp(12px,1.6vw,18px)/1 "Archivo Black",sans-serif;letter-spacing:.2em;color:#e6c46a;text-shadow:0 1px 0 #6e5520}
+.monitor{position:absolute;left:-9%;bottom:calc(24% + 34px);z-index:3;width:28%;height:22%;background:#24272c;border:3px solid var(--ink);border-radius:6px}
+.monitor::after{content:"";position:absolute;left:40%;bottom:-16px;width:20%;height:14px;background:#24272c;border:3px solid var(--ink);border-top:0}
+.bell{position:absolute;right:8%;bottom:calc(24% + 30px);z-index:3;width:44px;height:26px;border-radius:22px 22px 4px 4px;background:radial-gradient(circle at 35% 30%,#fff3b0,#d9a520 70%);border:3px solid var(--ink)}
+.bubble{position:absolute;right:-2%;top:6%;z-index:4;background:#fff;border:3px solid var(--ink);border-radius:18px;padding:8px 14px;font:15px/1.2 "Archivo Black",sans-serif;box-shadow:4px 4px 0 var(--ink);transform:rotate(4deg);opacity:0;transition:opacity .25s,transform .25s;pointer-events:none}
+.bubble.show{opacity:1;transform:rotate(4deg) translateY(-6px)}
+.hint{position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);z-index:4;white-space:nowrap;background:rgba(255,253,246,.9);padding:5px 10px;border-radius:12px;font:12px/1 "Share Tech Mono",monospace;letter-spacing:.1em;color:#3a3f47}
+
+/* ===== F9 cubicle farm ===== */
+#f9 .room{--wall:#e5d8bd;--carpet:#6f7680}
+#f9 .content{display:grid;grid-template-columns:1fr minmax(220px,330px);gap:clamp(20px,4vw,48px);align-items:start}
+.memo{position:relative;background:var(--paper);border-radius:3px;padding:clamp(22px,4vw,46px) clamp(20px,4vw,50px);box-shadow:0 1px 0 #ddd,0 22px 40px rgba(0,0,0,.28);transform:rotate(-.6deg);background-image:linear-gradient(transparent 0 calc(100% - 1px),rgba(47,143,216,.13) calc(100% - 1px)),none;background-size:100% 1.6em}
+.memo::before{content:"";position:absolute;top:-12px;left:50%;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ff8b8e,var(--red) 60%,#7d0d10);box-shadow:2px 5px 6px rgba(0,0,0,.35)}
+.lh{display:flex;align-items:center;gap:14px;border-bottom:4px double var(--ink);padding-bottom:12px;margin-bottom:14px}
+.lh .logo{width:52px;height:52px;border-radius:50%;background:var(--red);display:grid;place-items:center;color:var(--tooth);font:24px/1 "Archivo Black",sans-serif;border:3px solid var(--ink);flex:none}
+.lh h2{font-size:clamp(20px,2.6vw,30px)}
+.lh small{display:block;font:12px/1.3 "Share Tech Mono",monospace;letter-spacing:.14em;color:#555}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;font:14px/1.5 "Share Tech Mono",monospace;margin:0 0 16px}
+.meta dt{font-weight:700;color:#555}.meta dd{margin:0}
+.memo p{margin:0 0 .9em}
+.check{list-style:none;padding:0;margin:.3em 0 1.2em}
+.check li{position:relative;padding-left:34px;margin:.35em 0}
+.check li::before{content:"";position:absolute;left:0;top:.2em;width:20px;height:20px;border:2px solid var(--ink);border-radius:3px;background:#fff}
+.check li.y::after{content:"";position:absolute;left:5px;top:.05em;width:8px;height:15px;border:solid var(--red);border-width:0 4px 4px 0;transform:rotate(40deg)}
+.stamp{position:absolute;right:clamp(10px,4vw,40px);bottom:clamp(14px,4vw,40px);transform:rotate(-12deg);border:4px solid var(--red);color:var(--red);padding:6px 14px;border-radius:8px;font:clamp(16px,2vw,22px)/1.05 "Archivo Black",sans-serif;text-align:center;opacity:.82;mix-blend-mode:multiply}
+.stamp small{display:block;font:11px/1.2 "Share Tech Mono",monospace;letter-spacing:.2em}
+.sign{font-family:"Archivo Black",sans-serif;color:var(--red-d)}
+.pinned{display:grid;gap:22px;padding-top:30px}
+.polaroid{background:#fff;padding:10px 10px 14px;box-shadow:0 14px 28px rgba(0,0,0,.3);transform:rotate(2.5deg);position:relative}
+.polaroid::before{content:"";position:absolute;top:-14px;left:50%;width:90px;height:26px;margin-left:-45px;background:rgba(255,236,150,.8);transform:rotate(-3deg)}
+.polaroid figcaption{font:14px/1.3 "Share Tech Mono",monospace;text-align:center;margin-top:8px}
+.sticky{background:#fff27a;padding:16px 16px 18px;box-shadow:0 10px 18px rgba(0,0,0,.22);transform:rotate(-3deg);font:15px/1.4 "Share Tech Mono",monospace}
+.sticky b{font-family:"Archivo Black",sans-serif;font-weight:400}
+
+/* ===== F23 hall of fame ===== */
+#f23 .room{--wall:#24412f;--carpet:#5b1e20;--base:#7a5530}
+#f23 .win{top:6%;height:14%}
+.hof-head{text-align:center;margin:0 auto clamp(28px,5vw,54px);max-width:760px}
+.plaque-big{display:inline-block;padding:16px clamp(18px,4vw,44px);border-radius:10px;background:linear-gradient(180deg,#f6db8a,#c99a2e 55%,#a87a1c);border:3px solid #6a4a0e;box-shadow:0 10px 26px rgba(0,0,0,.45),inset 0 2px 0 rgba(255,255,255,.6)}
+.plaque-big h2{font-size:clamp(28px,5vw,58px);color:#3a2805;text-shadow:0 1px 0 rgba(255,255,255,.55)}
+.plaque-big p{margin:6px 0 0;font:13px/1.2 "Share Tech Mono",monospace;letter-spacing:.24em;color:#4a3408}
+.hof-head .sub{display:inline-block;color:#f3ecd9;margin-top:16px;background:rgba(20,36,26,.85);padding:6px 14px;border-radius:6px}
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:clamp(22px,3vw,40px) clamp(18px,2.6vw,34px);align-items:start}
+.frame{all:unset;cursor:zoom-in;display:block;position:relative;transition:transform .25s}
+.frame:hover{transform:translateY(-4px) rotate(-.5deg)}
+.frame:focus-visible{outline:3px solid var(--tooth);outline-offset:6px}
+.frame .fr{padding:12px;background:linear-gradient(135deg,#a8742f,#e7b95b 30%,#8c5c1e 55%,#d7a748 80%,#7a4f17);box-shadow:0 16px 28px rgba(0,0,0,.5);border-radius:2px}
+.frame .mat{background:#f4efe2;padding:10px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2),inset 0 3px 8px rgba(0,0,0,.25)}
+.frame img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#fff}
+.frame.tall img{aspect-ratio:3/4}
+.frame .tag2{display:block;margin:12px auto 0;width:86%;text-align:center;padding:7px 8px;border-radius:4px;background:linear-gradient(180deg,#f3d27b,#c4932a);border:2px solid #6a4a0e;font:12px/1.3 "Share Tech Mono",monospace;color:#2f2003;box-shadow:0 4px 8px rgba(0,0,0,.35)}
+.frame .tag2 b{display:block;font:13px/1.2 "Archivo Black",sans-serif;letter-spacing:.1em}
+.frame.r1{transform:rotate(-1.2deg)}.frame.r2{transform:rotate(1deg)}
+.spot{position:absolute;top:0;width:40%;height:100%;z-index:1;background:radial-gradient(ellipse 50% 60% at 50% 0%,rgba(255,240,190,.22),transparent 70%);pointer-events:none}
+
+/* ===== F42 break room ===== */
+#f42 .room{--wall:#cfe6f0;--carpet:#c7c1b2;--base:#9da7ae}
+#f42 .carpet{background:linear-gradient(90deg,rgba(0,0,0,.07) 1px,transparent 1px) 0 0/60px 100%,linear-gradient(0deg,rgba(0,0,0,.07) 1px,transparent 1px) 0 0/100% 60px,#e4e0d4}
+#f42 .content{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,260px);gap:clamp(18px,4vw,50px);align-items:start}
+.post{background:#f6efe1;border:2px solid #d8c9a8;border-radius:6px;box-shadow:0 20px 40px rgba(0,0,0,.25);overflow:hidden}
+.post .ph{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--ink);color:#fff;padding:10px 16px;font:13px/1.2 "Share Tech Mono",monospace;letter-spacing:.14em}
+.post .ph i{font-style:normal;color:var(--tooth)}
+.post .pb{display:grid;grid-template-columns:150px 1fr;gap:18px;padding:18px clamp(14px,3vw,26px) 22px}
+.post .pb img{border:2px solid #d8c9a8;background:#fff}
+.post .pb h2{grid-column:1/-1;font-size:clamp(24px,3.4vw,38px);color:var(--red)}
+.gt{font:clamp(14px,1.55vw,17px)/1.55 "Share Tech Mono",monospace;color:var(--ink)}
+.gt p{margin:0}
+.gt p.g{color:var(--gt)}
+.gt .r{visibility:hidden}
+.gt .k{display:none}
+.gt p.cur .k{display:inline;color:var(--gt);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.gt .end{margin-top:.9em}
+.breakprops{display:grid;gap:22px;justify-items:center}
+.fridge{position:relative;width:100%;max-width:240px;background:linear-gradient(90deg,#f2f4f5,#dfe3e6);border:3px solid #9aa3ab;border-radius:12px;padding:18px 16px 26px;box-shadow:0 18px 30px rgba(0,0,0,.2)}
+.fridge::before{content:"";position:absolute;right:10px;top:30px;width:8px;height:70px;border-radius:4px;background:#9aa3ab}
+.fridge h3{font-size:15px;margin:0 0 10px;letter-spacing:.06em}
+.mag{display:inline-block;margin:3px;padding:3px 7px;font:13px/1.2 "Archivo Black",sans-serif;border-radius:3px;box-shadow:1px 2px 0 rgba(0,0,0,.25)}
+.mag:nth-child(4n+1){background:var(--red);color:#fff;transform:rotate(-4deg)}
+.mag:nth-child(4n+2){background:var(--tooth);transform:rotate(3deg)}
+.mag:nth-child(4n+3){background:var(--pepe);color:#fff;transform:rotate(-2deg)}
+.mag:nth-child(4n){background:var(--tie);color:#fff;transform:rotate(5deg)}
+.coffee{font:14px/1.4 "Share Tech Mono",monospace;background:#fff;border:2px dashed #9aa3ab;padding:12px 14px;transform:rotate(1.5deg);max-width:240px}
+
+/* ===== F69 quarterly review ===== */
+#f69 .room{--wall:#1c2130;--carpet:#2b2f3a;--base:#3c4252}
+#f69 .win{top:8%;height:30%}
+#f69 .win::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(214,206,186,.95) 0 9px,rgba(0,0,0,.25) 9px 10px,transparent 10px 18px)}
+#f69 .tube{opacity:.25;box-shadow:none}
+.review-h{text-align:center;color:#e8ecf3;margin-bottom:26px}
+.review-h h2{font-size:clamp(30px,5vw,60px);color:#fff}
+.review-h .kicker{color:var(--tooth);background:#111;padding:6px 12px;border-radius:4px;display:inline-block;margin-bottom:8px}
+.review-h h2{text-shadow:0 3px 0 #111,0 0 24px rgba(0,0,0,.8)}
+.stage{position:relative;max-width:900px;margin:0 auto}
+.screen{position:relative;background:#fbfbf7;border:3px solid #111;border-top:14px solid #3a3f48;border-radius:0 0 4px 4px;padding:clamp(14px,3vw,30px);box-shadow:0 0 80px 10px rgba(255,250,220,.22),0 30px 60px rgba(0,0,0,.5);z-index:2}
+.screen::before{content:"";position:absolute;left:50%;bottom:-24px;width:30px;height:20px;margin-left:-15px;border-radius:0 0 6px 6px;background:#3a3f48}
+.slide-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--ink);padding-bottom:8px;margin-bottom:12px}
+.slide-top h3{font-size:clamp(18px,2.6vw,30px)}
+.slide-top span{font:13px/1 "Share Tech Mono",monospace;color:#555}
+.chart{width:100%;height:auto;display:block}
+.chart .line{fill:none;stroke:var(--red);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.chart .area{fill:url(#ga);opacity:0;transition:opacity 1s .9s}
+.play .chart .area{opacity:1}
+.chart .note{opacity:0;transition:opacity .5s 2s}
+.play .chart .note{opacity:1}
+.beam{position:absolute;left:50%;bottom:112px;width:120%;height:calc(100% - 112px);transform:translateX(-50%);z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(255,250,215,.35),rgba(255,250,215,.06));clip-path:polygon(47% 100%,53% 100%,100% 0,0 0);filter:blur(6px)}
+.projector{position:relative;z-index:2;width:150px;height:56px;margin:120px auto 0;background:linear-gradient(180deg,#59606b,#2e333b);border:3px solid #111;border-radius:8px}
+.projector::before{content:"";position:absolute;left:50%;top:-50px;width:12px;height:50px;margin-left:-6px;background:#2e333b;border:3px solid #111;border-bottom:0}
+.projector::after{content:"";position:absolute;left:50%;top:-74px;width:56px;height:30px;margin-left:-28px;background:#3a4049;border:3px solid #111;border-radius:6px;box-shadow:0 -6px 24px 6px rgba(255,250,215,.45)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,2vw,22px);margin-top:44px}
+.kpi{background:#fff;border-radius:12px;padding:16px 18px;border-top:8px solid var(--red);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.kpi:nth-child(2){border-top-color:var(--tooth)}.kpi:nth-child(3){border-top-color:var(--pepe)}.kpi:nth-child(4){border-top-color:var(--tie)}
+.kpi small{font:12px/1.2 "Share Tech Mono",monospace;letter-spacing:.16em;color:#5b6370;text-transform:uppercase}
+.kpi b{display:block;font:clamp(24px,2.8vw,36px)/1.1 "Archivo Black",sans-serif;margin:8px 0 6px;letter-spacing:-.01em}
+.kpi .d{font:13px/1.2 "Share Tech Mono",monospace;color:var(--pepe-d)}
+
+/* ===== PH penthouse ===== */
+#ph .room{--wall:#2f241f;--carpet:#5c3b2a;--base:#c49a52}
+#ph .win{top:3%;height:72%;left:2%;right:2%;border-color:#1e1714;background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 8px),#1e1714 calc(25% - 8px) 25%)}
+#ph .ceil{display:none}
+.ph-head{text-align:center;color:#fff;margin-bottom:64px;text-shadow:0 2px 14px rgba(60,20,40,.6)}
+.ph-head h2{font-size:clamp(34px,6vw,76px)}
+.ph-head .kicker{color:var(--tooth);background:rgba(17,17,17,.82);padding:6px 12px;border-radius:4px;display:inline-block;margin-bottom:8px;text-shadow:none}
+.folder{position:relative;max-width:900px;margin:0 auto;background:#f3d79a;border-radius:4px 14px 14px 14px;padding:clamp(18px,4vw,40px);box-shadow:0 30px 60px rgba(0,0,0,.45);border:3px solid #9c7a33}
+.folder::before{content:"PROMOTION PACKAGE";position:absolute;top:-34px;left:-3px;padding:8px 18px 6px;background:#f3d79a;border:3px solid #9c7a33;border-bottom:0;border-radius:10px 10px 0 0;font:12px/1.2 "Share Tech Mono",monospace;letter-spacing:.2em}
+.letter{background:var(--paper);padding:clamp(18px,3.5vw,38px);box-shadow:0 4px 14px rgba(0,0,0,.18);transform:rotate(.4deg)}
+.letter h3{font-size:clamp(22px,3vw,34px);margin-bottom:6px}
+.letter .salut{color:#555;margin:0 0 18px}
+.steps{counter-reset:s;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.steps li{counter-increment:s;position:relative;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:16px 16px 16px 66px;box-shadow:4px 4px 0 var(--ink)}
+.steps li::before{content:counter(s);position:absolute;left:14px;top:14px;width:38px;height:38px;border-radius:50%;background:var(--red);color:var(--tooth);display:grid;place-items:center;font:20px/1 "Archivo Black",sans-serif;border:2px solid var(--ink)}
+.steps b{font-family:"Archivo Black",sans-serif;font-weight:400;display:block;font-size:18px;margin-bottom:2px}
+.steps p{margin:0;font-size:15px}
+.ca-big{margin-top:22px;background:var(--ink);color:#fff;border-radius:10px;padding:14px 16px}
+.ca-big .kicker{color:var(--tooth);display:block;margin-bottom:6px}
+.ca-big .copy{background:var(--tooth)}
+.sig{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-top:22px;flex-wrap:wrap}
+.sig .who{font:14px/1.4 "Share Tech Mono",monospace}
+.sig .who b{font:22px/1 "Archivo Black",sans-serif;color:var(--red-d);display:block;transform:rotate(-3deg)}
+.notes{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(14px,3vw,30px);margin:56px auto 10px;max-width:900px}
+.note{display:block;width:164px;min-height:134px;padding:16px 14px;text-decoration:none;color:var(--ink);background:#fff27a;box-shadow:0 12px 20px rgba(0,0,0,.35);font:18px/1.1 "Archivo Black",sans-serif;transition:transform .2s;position:relative}
+.note small{display:block;margin-top:10px;font:13px/1.3 "Share Tech Mono",monospace}
+.note:nth-child(1){transform:rotate(-4deg)}.note:nth-child(2){transform:rotate(3deg);background:#ffb3c7}.note:nth-child(3){transform:rotate(-2deg);background:#b6f0a4}.note:nth-child(4){transform:rotate(5deg);background:#a9dcf4}
+.note:hover,.note:focus-visible{transform:rotate(0) scale(1.06);outline:none}
+.note::before{content:"";position:absolute;top:-8px;left:50%;width:50px;height:16px;margin-left:-25px;background:rgba(255,255,255,.5)}
+footer{position:relative;z-index:1;background:#101114;color:#a9afb8;padding:40px clamp(16px,5vw,72px) 60px;font-size:14px;text-align:center}
+footer .roof{font:13px/1 "Share Tech Mono",monospace;letter-spacing:.3em;color:#ff5a3c;margin-bottom:16px}
+footer p{max-width:780px;margin:0 auto 10px}
+
+/* ===== lightbox ===== */
+.lb{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(10,12,16,.9)}
+.lb.open{display:flex}
+.lb figure{margin:0;max-width:min(92vw,900px);text-align:center}
+.lb .fr{padding:14px;background:linear-gradient(135deg,#a8742f,#e7b95b 30%,#8c5c1e 55%,#d7a748 80%,#7a4f17);display:inline-block}
+.lb img{max-height:72vh;width:auto;margin:0 auto;background:#fff}
+.lb figcaption{display:inline-block;margin-top:14px;padding:8px 16px;border-radius:4px;background:linear-gradient(180deg,#f3d27b,#c4932a);border:2px solid #6a4a0e;font:14px/1.3 "Share Tech Mono",monospace;color:#2f2003}
+.lb button{position:absolute;border:2px solid #fff;background:rgba(0,0,0,.4);color:#fff;width:48px;height:48px;border-radius:50%;font:22px/1 "Archivo Black",sans-serif}
+.lb .x{top:16px;right:16px}.lb .pv{left:12px;top:50%}.lb .nx{right:12px;top:50%}
+.lb button:focus-visible{outline:3px solid var(--tooth)}
+
+/* ===== responsive ===== */
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;text-align:left}
+  .desk-wrap{width:min(88%,420px);order:-1;margin-top:8px}
+  #f9 .content,#f42 .content{grid-template-columns:1fr}
+  .pinned{grid-template-columns:1fr 1fr;align-items:start;padding-top:0}
+  .breakprops{grid-template-columns:1fr 1fr;align-items:start}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps{grid-template-columns:1fr}
+  .prop.hide-m{display:none}
+}
+@media (max-width:640px){
+  :root{--panel-h:58px}
+  .btns .fb{display:none}
+  .disp{min-width:0;padding:3px 8px}
+  .digits{font-size:28px}
+  .ding span{display:none}
+  .ding{padding:0 10px}
+  .content{padding-left:14px;padding-right:14px}
+  .post .pb{grid-template-columns:1fr}
+  .post .pb img{max-width:170px}
+  .wall{grid-template-columns:1fr 1fr;gap:20px 14px}
+  .frame .fr{padding:7px}.frame .mat{padding:5px}
+  .frame .tag2{width:100%;font-size:11px}
+  .pinned,.breakprops{grid-template-columns:1fr}
+  .fore{height:110px}
+  .badge{margin-top:30px}
+  .note{width:140px;min-height:112px;font-size:15px}
+  .kpi:first-child{grid-column:1/-1}
+  .desk-wrap{padding-bottom:44px;margin-bottom:10px}
+  .hoist .stencil{font-size:46px}
+  .kpis{gap:10px}
+  .kpi{padding:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  .tube.flick,.bob,.gt p.cur .k{animation:none}
+  .doors{display:none}
+  .chart .line{stroke-dashoffset:0}
+  .chart .area,.chart .note{opacity:1;transition:none}
+  .fresco .grin{transition:none}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="plant" viewBox="0 0 140 240">
+      <g fill="#3f8f3a" stroke="#1f4d1c" stroke-width="3">
+        <path d="M70 150C40 120 18 80 24 30c22 30 40 70 46 120z"/>
+        <path d="M70 150c30-30 52-70 46-120-22 30-40 70-46 120z"/>
+        <path d="M70 152C34 140 8 120 0 86c30 6 56 30 70 66z" fill="#4fa548"/>
+        <path d="M70 152c36-12 62-32 70-66-30 6-56 30-70 66z" fill="#4fa548"/>
+        <path d="M70 150C62 100 64 50 72 4c12 44 10 96-2 146z" fill="#5bb653"/>
+      </g>
+      <path d="M34 160h72l-10 78H44z" fill="#c8643b" stroke="#1c1d22" stroke-width="3"/>
+      <rect x="28" y="148" width="84" height="18" rx="4" fill="#a94f2c" stroke="#1c1d22" stroke-width="3"/>
+    </symbol>
+    <symbol id="cooler" viewBox="0 0 100 270">
+      <path d="M30 6h40c8 0 12 4 12 12v74c0 8-4 12-12 12H30c-8 0-12-4-12-12V18c0-8 4-12 12-12z" fill="#8fd0f5" fill-opacity=".85" stroke="#2f6f96" stroke-width="3"/>
+      <path d="M26 30h48M26 60h48" stroke="#5aa9d6" stroke-width="3"/>
+      <rect x="38" y="102" width="24" height="10" fill="#6aa9cc" stroke="#2f6f96" stroke-width="2"/>
+      <rect x="12" y="110" width="76" height="156" rx="8" fill="#eef0f2" stroke="#1c1d22" stroke-width="3"/>
+      <rect x="26" y="134" width="12" height="16" rx="2" fill="#e8262a"/><rect x="62" y="134" width="12" height="16" rx="2" fill="#2f8fd8"/>
+      <rect x="22" y="170" width="56" height="6" fill="#c5ccd2"/>
+    </symbol>
+    <symbol id="vend" viewBox="0 0 160 280">
+      <rect x="4" y="4" width="152" height="272" rx="8" fill="#e8262a" stroke="#1c1d22" stroke-width="4"/>
+      <rect x="18" y="20" width="96" height="190" fill="#1f2a36" stroke="#1c1d22" stroke-width="3"/>
+      <g fill="#ffe23d"><rect x="26" y="30" width="18" height="28"/><rect x="56" y="30" width="18" height="28" fill="#b8e33c"/><rect x="86" y="30" width="18" height="28" fill="#a9d9ec"/>
+      <rect x="26" y="78" width="18" height="28" fill="#a9d9ec"/><rect x="56" y="78" width="18" height="28"/><rect x="86" y="78" width="18" height="28" fill="#ffffff"/>
+      <rect x="26" y="126" width="18" height="28" fill="#b8e33c"/><rect x="56" y="126" width="18" height="28" fill="#ffffff"/><rect x="86" y="126" width="18" height="28"/></g>
+      <path d="M18 66h96M18 114h96M18 162h96" stroke="#8a96a3" stroke-width="3"/>
+      <rect x="124" y="30" width="22" height="70" fill="#1c1d22"/><rect x="18" y="226" width="96" height="30" fill="#1c1d22"/>
+    </symbol>
+    <symbol id="clock" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="46" fill="#fff" stroke="#1c1d22" stroke-width="6"/>
+      <path d="M50 50V18M50 50l20 12" stroke="#1c1d22" stroke-width="6" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="panel" role="banner">
+  <div class="disp" aria-live="polite" aria-atomic="true">
+    <span class="arrow" id="arrow" aria-hidden="true">&#9650;</span>
+    <span class="digits"><span class="ghost" aria-hidden="true">888</span><span class="num" id="num">B1</span></span>
+    <span class="sr">current floor</span>
+  </div>
+  <div class="fname"><small>FRESCO HOLDINGS</small><b id="fname">PARKING</b></div>
+  <nav class="btns" aria-label="Floors">
+    <a class="fb" href="#f1" data-go="0" aria-label="Floor 1, lobby">1</a>
+    <a class="fb" href="#f9" data-go="1" aria-label="Floor 9, cubicle farm">9</a>
+    <a class="fb" href="#f23" data-go="2" aria-label="Floor 23, employee of the month">23</a>
+    <a class="fb" href="#f42" data-go="3" aria-label="Floor 42, break room">42</a>
+    <a class="fb" href="#f69" data-go="4" aria-label="Floor 69, quarterly review">69</a>
+    <a class="fb" href="#ph" data-go="5" aria-label="Penthouse, how to buy">PH</a>
+    <button class="ding" id="ding" type="button" aria-pressed="false" aria-label="Elevator ding sound">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.4-2h-4.8A2.5 2.5 0 0 0 12 22zm7-6V11a7 7 0 0 0-5.5-6.8V3.5a1.5 1.5 0 0 0-3 0v.7A7 7 0 0 0 5 11v5l-2 2v1h18v-1z"/></svg>
+      <span id="dingTxt">DING: OFF</span>
+    </button>
+  </nav>
+</header>
+
+<div class="sky" aria-hidden="true">
+  <div id="dusk"></div>
+  <div id="sun"></div>
+  <div class="puffs" id="cloudsHi"></div>
+  <div class="city" id="cityFar"></div>
+  <div class="city" id="cityMid"></div>
+  <div class="city" id="cityNear"></div>
+  <div class="puffs" id="cloudSea"></div>
+  <div id="cloudTint"></div>
+</div>
+
+<main id="top">
+
+<!-- ================= FLOOR 1 · LOBBY ================= -->
+<section class="floor" id="f1" data-floor="1" data-name="LOBBY" data-label="FLOOR 01 · LOBBY">
+  <div class="room">
+    <div class="win"></div>
+    <div class="carpet"></div>
+    <div class="ceil" data-speed="-.12"><div class="tubes"><i class="tube"></i><i class="tube flick"></i><i class="tube"></i><i class="tube flick b"></i></div></div>
+    <div class="prop hide-m" data-speed=".08" style="left:1%;bottom:12%;width:clamp(90px,10vw,150px);height:clamp(150px,17vw,260px)"><svg><use href="#plant"/></svg></div>
+    <div class="prop hide-m" data-speed="-.05" style="right:2%;top:16%;width:70px;height:70px"><svg><use href="#clock"/></svg></div>
+    <div class="content">
+      <div class="hero">
+        <div>
+          <span class="kicker">Fresco Holdings Inc. · Lobby · Est. forever</span>
+          <h1>$FRESCO</h1>
+          <div class="tag">smiling through it since forever</div>
+          <p class="lede">Meet Fresco: red frog, light-blue shirt, tie straight, teeth out. The office wagie who grins through every Monday, every "quick sync" and every red candle. Get in the elevator. We're going up.</p>
+          <div class="badge">
+            <div class="bh"><span>VISITOR PASS</span><b>CA</b></div>
+            <div class="ca"><code data-ca>CA: coming soon</code><button class="copy" type="button" data-copy>COPY</button></div>
+          </div>
+          <div class="cta">
+            <a class="btn red" href="#ph">Ride to the penthouse &#9650;</a>
+            <a class="btn" href="#f23">Employee of the Month</a>
+          </div>
+        </div>
+        <div class="desk-wrap">
+          <div class="bob">
+            <button class="fresco" id="fresco" type="button" aria-label="Poke Fresco (makes the grin wider)">
+              <img src="fresco.png" alt="Fresco, the red frog in a light-blue shirt and tie, grinning with big yellow teeth" width="680" height="680">
+              <img class="grin" id="grin" src="grin.png" alt="" width="435" height="240">
+            </button>
+          </div>
+          <div class="monitor"></div><div class="bell"></div>
+          <div class="desk"><b>RECEPTION</b></div>
+          <div class="bubble" id="bubble">GRIN +20%</div>
+          <div class="hint">click fresco. he loves feedback.</div>
+        </div>
+      </div>
+    </div>
+    <div class="fore" data-speed=".1"><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i></div>
+  </div>
+  <div class="doors" aria-hidden="true"><i class="door l"><span>0</span></i><i class="door r"><span>1</span></i></div>
+</section>
+
+<div class="hoist" aria-hidden="true"><i class="rail l"></i><i class="rail r"></i><div class="stencil">FL 09<small>NEXT STOP · CUBICLE FARM</small></div></div>
+
+<!-- ================= FLOOR 9 · CUBICLE FARM ================= -->
+<section class="floor" id="f9" data-floor="9" data-name="CUBICLE FARM" data-label="FLOOR 09 · CUBICLE FARM">
+  <div class="room">
+    <div class="win"></div>
+    <div class="carpet"></div>
+    <div class="ceil" data-speed="-.12"><div class="tubes"><i class="tube flick"></i><i class="tube"></i><i class="tube"></i><i class="tube flick b"></i></div></div>
+    <div class="prop hide-m" data-speed="-.06" style="left:2%;bottom:13%;width:80px;height:216px"><svg><use href="#cooler"/></svg></div>
+    <div class="prop hide-m" data-speed=".06" style="right:1.5%;bottom:13%;width:120px;height:206px"><svg><use href="#plant"/></svg></div>
+    <div class="content">
+      <article class="memo" aria-labelledby="memoT">
+        <div class="lh"><div class="logo">F</div><div><h2 id="memoT">Welcome aboard!! :)</h2><small>FRESCO HOLDINGS · HUMAN RESOURCES · DEPT. OF SMILES</small></div></div>
+        <dl class="meta"><dt>TO</dt><dd>New hire (you)</dd><dt>FROM</dt><dd>HR, Smile Compliance Unit</dd><dt>RE</dt><dd>Onboarding: meet your new coworker</dd><dt>DATE</dt><dd>Every Monday, forever</dd></dl>
+        <p>Hi team!! Please join us in welcoming our most dedicated associate, <b>Fresco</b>. Fresco is the red frog in the light-blue shirt and tie who has been at his desk since before the building was built. He has never taken a sick day. He has never stopped smiling. We checked. Several times. With a flashlight.</p>
+        <p>Fresco started life as a drawing passed around the internet's office-worker corner: the cheerful wagie, grinning so hard it hurts, typing at 140 words a minute toward a promotion that is always one quarter away. He is the face you make in the 9am stand-up. He is all of us, only redder.</p>
+        <p><b>Your onboarding checklist:</b></p>
+        <ul class="check">
+          <li class="y">Smile. (Mandatory. See Policy 4.2, "The Grin.")</li>
+          <li class="y">Bloodshot eyes are a sign of passion, not a medical concern.</li>
+          <li class="y">Handshakes must be firm. Target sound: <b>KRUNCH</b>.</li>
+          <li class="y">Crying is allowed. Keep the corners of the mouth up.</li>
+          <li class="y">Friday is grill day. Wear the apron. Read the apron.</li>
+          <li>Ask for a raise. (Optional. Discouraged. Smiling.)</li>
+        </ul>
+        <p>And now Fresco has a ticker. <b>$FRESCO</b> is a meme coin on Solana for everyone who has ever typed "happy to help!" through clenched teeth. No roadmap. No promises. Just the grin and an elevator that only goes up.</p>
+        <p>Warmest regards :) :) :)<br><span class="sign">HR</span> <small>(we are also smiling)</small></p>
+        <div class="stamp">APPROVED<small>SMILE ON FILE</small></div>
+      </article>
+      <aside class="pinned">
+        <figure class="polaroid" style="margin:0"><img src="meme_01.jpg" alt="Fresco typing at his desk under a '#1 Employee of all time' note" width="680" height="1075" loading="lazy"><figcaption>new hire photo · day 1 (and 4,000)</figcaption></figure>
+        <div class="sticky"><b>REMINDER:</b><br>the vibe is mandatory.<br>the coffee is decaf.<br>the grin is forever.</div>
+      </aside>
+    </div>
+    <div class="fore" data-speed=".14"><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i></div>
+  </div>
+  <div class="doors" aria-hidden="true"><i class="door l"><span>0</span></i><i class="door r"><span>9</span></i></div>
+</section>
+
+<div class="hoist" aria-hidden="true"><i class="rail l"></i><i class="rail r"></i><div class="stencil">FL 23<small>NEXT STOP · HALL OF FAME</small></div></div>
+
+<!-- ================= FLOOR 23 · EMPLOYEE OF THE MONTH ================= -->
+<section class="floor" id="f23" data-floor="23" data-name="HALL OF FAME" data-label="FLOOR 23 · HALL OF FAME">
+  <div class="room">
+    <div class="win"></div>
+    <div class="carpet"></div>
+    <div class="ceil" data-speed="-.12"><div class="tubes"><i class="tube"></i><i class="tube"></i><i class="tube flick"></i><i class="tube"></i></div></div>
+    <i class="spot" style="left:5%"></i><i class="spot" style="left:55%"></i>
+    <div class="content">
+      <div class="hof-head">
+        <div class="plaque-big"><h2>Employee of the Month</h2><p>EVERY MONTH · SINCE FOREVER</p></div>
+        <p class="sub">Twelve months a year, one name on every plaque. Click a frame to take a closer look.</p>
+      </div>
+      <div class="wall" id="wall"></div>
+    </div>
+  </div>
+  <div class="doors" aria-hidden="true"><i class="door l"><span>2</span></i><i class="door r"><span>3</span></i></div>
+</section>
+
+<div class="hoist" aria-hidden="true"><i class="rail l"></i><i class="rail r"></i><div class="stencil">FL 42<small>NEXT STOP · BREAK ROOM</small></div></div>
+
+<!-- ================= FLOOR 42 · BREAK ROOM ================= -->
+<section class="floor" id="f42" data-floor="42" data-name="BREAK ROOM" data-label="FLOOR 42 · BREAK ROOM">
+  <div class="room">
+    <div class="win"></div>
+    <div class="carpet"></div>
+    <div class="ceil" data-speed="-.12"><div class="tubes"><i class="tube"></i><i class="tube flick b"></i><i class="tube"></i></div></div>
+    <div class="prop hide-m" data-speed="-.07" style="right:1.5%;bottom:13%;width:120px;height:210px"><svg><use href="#vend"/></svg></div>
+    <div class="prop hide-m" data-speed=".05" style="left:1%;bottom:13%;width:80px;height:216px"><svg><use href="#cooler"/></svg></div>
+    <div class="content">
+      <article class="post" id="story" aria-labelledby="storyT">
+        <div class="ph"><span>BREAK ROOM · FOUND IN THE PRINTER TRAY</span><i>#42</i></div>
+        <div class="pb">
+          <img src="meme_02.jpg" alt="Fresco grinning at his desk while a green Pepe coworker leans over with a coffee mug" width="680" height="544" loading="lazy">
+          <div>
+            <h2 id="storyT">wagie to whale (a true story, probably)</h2>
+            <div class="gt" id="gt">
+              <p class="g">&gt;be fresco</p>
+              <p class="g">&gt;alarm goes off at 6:00am</p>
+              <p class="g">&gt;already awake. already grinning</p>
+              <p class="g">&gt;94 minute commute, standing, grinning</p>
+              <p class="g">&gt;boss leans over the cubicle: "quick sync?"</p>
+              <p class="g">&gt;sync lasts three hours</p>
+              <p class="g">&gt;it could have been an email</p>
+              <p class="g">&gt;lunch is the last cracker in the vending machine</p>
+              <p class="g">&gt;pepe from accounting peeks over the wall</p>
+              <p class="g">&gt;"ever heard of solana, fresco?"</p>
+              <p class="g">&gt;do not let the smile slip</p>
+              <p class="g">&gt;open phantom under the desk during the all-hands</p>
+              <p class="g">&gt;ape the cracker money</p>
+              <p class="g">&gt;chart goes up</p>
+              <p class="g">&gt;chart goes up again</p>
+              <p class="g">&gt;quarterly review. boss asks why i'm smiling</p>
+              <p class="g">&gt;i'm always smiling. this time it's real</p>
+              <p class="g">&gt;step into the elevator, press PH</p>
+              <p class="g">&gt;it lights up</p>
+              <p class="end">the grin was never fake. it was just early.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+      <aside class="breakprops">
+        <div class="fridge"><h3>FRIDGE MAGNETS</h3><span class="mag">SMILE</span><span class="mag">WAGMI</span><span class="mag">KRUNCH</span><span class="mag">HODL</span><span class="mag">GM</span><span class="mag">UP</span><span class="mag">$FRESCO</span><span class="mag">:)</span></div>
+        <div class="coffee"><b>KITCHEN RULES</b><br>1. label your lunch<br>2. do not eat fresco's cracker<br>3. whoever made the decaf: we know</div>
+      </aside>
+    </div>
+    <div class="fore" data-speed=".12"><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i><i class="cube"></i></div>
+  </div>
+  <div class="doors" aria-hidden="true"><i class="door l"><span>4</span></i><i class="door r"><span>2</span></i></div>
+</section>
+
+<div class="hoist" aria-hidden="true"><i class="rail l"></i><i class="rail r"></i><div class="stencil">FL 69<small>NEXT STOP · QUARTERLY REVIEW</small></div></div>
+
+<!-- ================= FLOOR 69 · QUARTERLY REVIEW ================= -->
+<section class="floor" id="f69" data-floor="69" data-name="QUARTERLY REVIEW" data-label="FLOOR 69 · QUARTERLY REVIEW">
+  <div class="room">
+    <div class="win"></div>
+    <div class="carpet"></div>
+    <div class="ceil" data-speed="-.12"><div class="tubes"><i class="tube"></i><i class="tube"></i><i class="tube"></i></div></div>
+    <div class="content">
+      <div class="review-h"><span class="kicker">Lights off · Projector on</span><h2>Quarterly Review</h2></div>
+      <div class="stage" id="stage">
+        <div class="screen">
+          <div class="slide-top"><h3>$FRESCO · performance</h3><span>slide 1 of 1 · confidential :)</span></div>
+          <svg class="chart" viewBox="0 0 800 380" role="img" aria-label="A joke chart: the smile line only goes up, quarter after quarter">
+            <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8262a" stop-opacity=".28"/><stop offset="1" stop-color="#e8262a" stop-opacity="0"/></linearGradient></defs>
+            <g stroke="#d7d7d0" stroke-width="1"><path d="M60 330H780M60 260H780M60 190H780M60 120H780M60 50H780"/></g>
+            <path d="M60 20V330H780" fill="none" stroke="#1c1d22" stroke-width="3"/>
+            <g font-family="Share Tech Mono,monospace" font-size="15" fill="#555">
+              <text x="100" y="356">Q1</text><text x="270" y="356">Q2</text><text x="440" y="356">Q3</text><text x="610" y="356">Q4</text><text x="730" y="356">PH</text>
+              <text x="14" y="190" transform="rotate(-90 22 190)">SMILES</text>
+            </g>
+            <path class="area" d="M60 318L130 300L180 306L240 262L300 268L360 214L410 222L470 168L530 150L580 158L640 100L700 74L760 30V330H60Z"/>
+            <path class="line" pathLength="1" d="M60 318L130 300L180 306L240 262L300 268L360 214L410 222L470 168L530 150L580 158L640 100L700 74L760 30"/>
+            <g class="note">
+              <circle cx="760" cy="30" r="9" fill="#ffe23d" stroke="#1c1d22" stroke-width="3"/>
+              <path d="M632 50H744" stroke="#1c1d22" stroke-width="2" stroke-dasharray="4 4"/>
+              <rect x="470" y="34" width="160" height="34" rx="6" fill="#ffe23d" stroke="#1c1d22" stroke-width="2"/>
+              <text x="550" y="57" text-anchor="middle" font-family="Archivo Black,sans-serif" font-size="15" fill="#1c1d22">WE ARE HERE</text>
+              <text x="300" y="300" font-family="Share Tech Mono,monospace" font-size="14" fill="#888">(the dips are "team building")</text>
+            </g>
+          </svg>
+        </div>
+        <div class="beam" aria-hidden="true"></div>
+        <div class="projector" aria-hidden="true"></div>
+      </div>
+      <!-- PLACEHOLDER tokenomics: only keep these if they are literally true at launch (see LAUNCH_KIT.md) -->
+      <div class="kpis">
+        <div class="kpi"><small>Total supply</small><b>1,000,000,000</b><span class="d">&#9650; one billion grins</span></div>
+        <div class="kpi"><small>Buy / sell tax</small><b>0%</b><span class="d">&#9650; HR approved</span></div>
+        <div class="kpi"><small>Launch</small><b>Fair</b><span class="d">&#9650; no presale, no team bag</span></div>
+        <div class="kpi"><small>Liquidity</small><b>Burned</b><span class="d">&#9650; nobody leaves early</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="doors" aria-hidden="true"><i class="door l"><span>6</span></i><i class="door r"><span>9</span></i></div>
+</section>
+
+<div class="hoist" aria-hidden="true"><i class="rail l"></i><i class="rail r"></i><div class="stencil">PH<small>TOP FLOOR · ABOVE THE CLOUDS</small></div></div>
+
+<!-- ================= PENTHOUSE ================= -->
+<section class="floor" id="ph" data-floor="70" data-name="PENTHOUSE" data-label="PENTHOUSE · C-SUITE">
+  <div class="room">
+    <div class="win"></div>
+    <div class="carpet"></div>
+    <div class="prop hide-m" data-speed=".06" style="left:1.5%;bottom:13%;width:130px;height:224px"><svg><use href="#plant"/></svg></div>
+    <div class="content">
+      <div class="ph-head"><span class="kicker">Top floor · sunset · above the clouds</span><h2>Your Promotion Package</h2></div>
+      <div class="folder">
+        <div class="letter">
+          <h3>Congratulations on your promotion.</h3>
+          <p class="salut">Effective immediately, you are a Senior Vice President of Smiling. Please complete the four steps below to claim your corner office.</p>
+          <ol class="steps">
+            <li><b>Get Phantom</b><p>Install the Phantom wallet (app or browser extension). Write your recovery phrase on paper. Never share it with anyone, not even HR.</p></li>
+            <li><b>Get SOL</b><p>Buy SOL on an exchange or inside Phantom, then send it to your Phantom wallet address.</p></li>
+            <li><b>Go to pump.fun or Jupiter</b><p>Open pump.fun while it's on the bonding curve, or Jupiter once it has migrated. Connect Phantom.</p></li>
+            <li><b>Paste the CA and swap</b><p>Paste the contract address below, check it matches this page exactly, choose your amount, confirm. Grin.</p></li>
+          </ol>
+          <div class="ca-big"><span class="kicker">Contract address</span><div class="ca"><code data-ca>CA: coming soon</code><button class="copy" type="button" data-copy>COPY</button></div></div>
+          <div class="sig"><div class="who"><b>Fresco</b>Chief Smiling Officer</div><a class="btn red" href="#f1">Back to the lobby &#9660;</a></div>
+        </div>
+      </div>
+      <nav class="notes" aria-label="Socials">
+        <a class="note" href="#">X<small>daily memos from the 69th floor</small></a>
+        
+        <a class="note" href="#">DexScreener<small>the chart that only goes up (hopefully)</small></a>
+        <a class="note" href="#">pump.fun<small>where the elevator starts</small></a>
+      </nav>
+    </div>
+  </div>
+  <div class="doors" aria-hidden="true"><i class="door l"><span>P</span></i><i class="door r"><span>H</span></i></div>
+</section>
+</main>
+
+<footer>
+  <div class="roof">&#9650; ROOF ACCESS · AUTHORISED GRINS ONLY</div>
+  <p><b>$FRESCO is a meme coin with no intrinsic value and no expectation of financial return.</b> It is for entertainment only. There is no team promise, no roadmap and no utility. Crypto is volatile; only use money you can afford to lose. Nothing here is financial advice.</p>
+  <p>Fresco is a fan-made internet character. This project is not affiliated with, endorsed by or connected to Matt Furie, the creators of Pepe the Frog, any original Fresco artist, or any other person, company or project.</p>
+  <p>&copy; Fresco Holdings (not a real company). Keep smiling.</p>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Employee of the Month portrait">
+  <button class="x" type="button" aria-label="Close">&times;</button>
+  <button class="pv" type="button" aria-label="Previous">&#8249;</button>
+  <figure><span class="fr"><img id="lbImg" src="meme_01.jpg" alt=""></span><br><figcaption id="lbCap"></figcaption></figure>
+  <button class="nx" type="button" aria-label="Next">&#8250;</button>
+</div>
+
+<script>
+var CA='';
+(function(){
+  'use strict';
+  var doc=document.documentElement; doc.classList.add('js');
+  var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- CA boxes ---------- */
+  document.querySelectorAll('[data-ca]').forEach(function(el){el.textContent=CA?CA:'CA: coming soon';});
+  document.querySelectorAll('[data-copy]').forEach(function(b){
+    if(!CA){b.textContent='SOON';}
+    b.addEventListener('click',function(){
+      if(!CA){b.textContent='SOON :)';return;}
+      var done=function(){b.textContent='COPIED';setTimeout(function(){b.textContent='COPY';},1600);};
+      if(navigator.clipboard){navigator.clipboard.writeText(CA).then(done,done);}else{var t=document.createElement('textarea');t.value=CA;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(e){}t.remove();done();}
+    });
+  });
+
+  /* ---------- Employee of the Month wall ---------- */
+  var memes=[
+    ['meme_01.jpg','JANUARY','Typed 14,000 emails. Smiled at each one.','Fresco typing at his desk, a note behind him reads number one employee of all time',1],
+    ['meme_02.jpg','FEBRUARY','Survived a "quick question" from accounting.','Fresco grinning at his keyboard while a green Pepe coworker with a mug leans in',0],
+    ['meme_03.jpg','MARCH','Presented the chart. The chart agreed.','Fresco presenting a rising $fresco chart to two coworkers',0],
+    ['meme_04.jpg','APRIL','Best friends with Pepe from accounting.','Green Pepe in a blanket next to grinning red Fresco',0],
+    ['meme_05.jpg','MAY','Smile audit: passed, 100%.','Close-up of Fresco grinning with big yellow teeth',0],
+    ['meme_06.jpg','JUNE','Grill master, company picnic.','Fresco grilling burgers in a Kiss Me apron',0],
+    ['meme_07.jpg','JULY','Closed the deal. KRUNCH.','Two Frescos shaking hands with a KRUNCH sound effect',0],
+    ['meme_08.jpg','AUGUST','Sweating, but professionally.','Fresco grinning while sweating and tearing up',0],
+    ['meme_09.jpg','SEPTEMBER','Grin so wide it needed a permit.','Extreme close-up of Fresco\'s straining grin',0],
+    ['meme_10.jpg','OCTOBER','The knowing smile after payday.','Fresco with a calm, knowing smirk in his shirt and tie',0]
+  ];
+  var wall=document.getElementById('wall');
+  memes.forEach(function(m,i){
+    var b=document.createElement('button');b.type='button';
+    b.className='frame '+(i%3===0?'r1':i%3===2?'r2':'')+(m[4]?' tall':'');
+    b.setAttribute('aria-label','Open portrait: '+m[1]+', '+m[2]);
+    b.innerHTML='<span class="fr" style="display:block"><span class="mat" style="display:block"><img loading="lazy" src="'+m[0]+'" alt="'+m[3].replace(/"/g,'&quot;')+'"></span></span><span class="tag2"><b>'+m[1]+'</b>'+m[2]+'</span>';
+    b.addEventListener('click',function(){openLb(i);});
+    wall.appendChild(b);
+  });
+  var lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap'),cur=0,lastFocus=null;
+  function show(i){cur=(i+memes.length)%memes.length;var m=memes[cur];lbImg.src=''+m[0];lbImg.alt=m[3];lbCap.textContent='EMPLOYEE OF THE MONTH · '+m[1]+' · '+m[2];}
+  function openLb(i){lastFocus=document.activeElement;show(i);lb.classList.add('open');lb.querySelector('.x').focus();}
+  function closeLb(){lb.classList.remove('open');if(lastFocus)lastFocus.focus();}
+  lb.querySelector('.x').addEventListener('click',closeLb);
+  lb.querySelector('.pv').addEventListener('click',function(){show(cur-1);});
+  lb.querySelector('.nx').addEventListener('click',function(){show(cur+1);});
+  lb.addEventListener('click',function(e){if(e.target===lb)closeLb();});
+  document.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('open'))return;
+    if(e.key==='Escape')closeLb();else if(e.key==='ArrowLeft')show(cur-1);else if(e.key==='ArrowRight')show(cur+1);
+    else if(e.key==='Tab'){var f=lb.querySelectorAll('button');var a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}}
+  });
+
+  /* ---------- grin easter egg ---------- */
+  var fresco=document.getElementById('fresco'),grin=document.getElementById('grin'),bubble=document.getElementById('bubble'),pokes=0,bt;
+  var lines=['GRIN +20%','GRIN +40%','GRIN +60%','GRIN +80%','HR HAS BEEN NOTIFIED','resetting grin...'];
+  fresco.addEventListener('click',function(){
+    pokes=(pokes+1)%6;
+    var s=pokes===0?1:1+pokes*0.11;
+    grin.style.transform='scale('+s+','+(1+(s-1)*0.45)+')';
+    bubble.textContent=lines[(pokes+5)%6];bubble.classList.add('show');clearTimeout(bt);bt=setTimeout(function(){bubble.classList.remove('show');},1400);
+    if(!RM){fresco.classList.remove('shake');void fresco.offsetWidth;fresco.classList.add('shake');}
+    if(soundOn)ding(0.5);
+  });
+
+  /* ---------- WebAudio ding ---------- */
+  var actx=null,soundOn=false,dingBtn=document.getElementById('ding'),dingTxt=document.getElementById('dingTxt');
+  function ding(vol){
+    if(!actx)return; vol=vol||1;
+    var t=actx.currentTime;
+    [[1318.5,0],[1046.5,0.32]].forEach(function(n){
+      [1,2.01].forEach(function(h,k){
+        var o=actx.createOscillator(),g=actx.createGain();
+        o.type='sine';o.frequency.value=n[0]*h;
+        var p=(k?0.05:0.22)*vol;
+        g.gain.setValueAtTime(0.0001,t+n[1]);g.gain.exponentialRampToValueAtTime(p,t+n[1]+0.008);g.gain.exponentialRampToValueAtTime(0.0001,t+n[1]+1.6);
+        o.connect(g);g.connect(actx.destination);o.start(t+n[1]);o.stop(t+n[1]+1.7);
+      });
+    });
+  }
+  dingBtn.addEventListener('click',function(){
+    soundOn=!soundOn;
+    if(soundOn&&!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){soundOn=false;}}
+    if(actx&&actx.state==='suspended')actx.resume();
+    dingBtn.setAttribute('aria-pressed',String(soundOn));dingTxt.textContent='DING: '+(soundOn?'ON':'OFF');
+    if(soundOn)ding();
+  });
+
+  /* ---------- skyline generation ---------- */
+  function rng(seed){return function(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};}
+  function skyline(id,seed,minH,maxH,minW,maxW,fill,lit){
+    var r=rng(seed),x=0,s='',w,h,W=1600,H=600;
+    while(x<W){w=minW+r()*(maxW-minW);h=minH+r()*(maxH-minH);
+      s+='<rect x="'+x.toFixed(0)+'" y="'+(H-h).toFixed(0)+'" width="'+w.toFixed(0)+'" height="'+h.toFixed(0)+'" fill="'+fill+'"/>';
+      if(r()>.7)s+='<rect x="'+(x+w/2-2).toFixed(0)+'" y="'+(H-h-26).toFixed(0)+'" width="4" height="26" fill="'+fill+'"/>';
+      if(lit){for(var yy=H-h+14;yy<H-10;yy+=22){for(var xx=x+8;xx<x+w-12;xx+=16){if(r()>.55)s+='<rect class="lw" x="'+xx.toFixed(0)+'" y="'+yy.toFixed(0)+'" width="7" height="10"/>';}}}
+      x+=w+r()*10;}
+    document.getElementById(id).innerHTML='<svg viewBox="0 0 1600 600" preserveAspectRatio="xMidYMax slice"><g fill="#fff3b0">'+s+'</g></svg>';
+  }
+  skyline('cityFar',11,180,460,50,120,'#9cbfd8',false);
+  skyline('cityMid',29,140,380,60,150,'#6b8fb0',false);
+  skyline('cityNear',47,90,300,90,190,'#40597a',true);
+
+  /* ---------- scroll engine (single rAF loop) ---------- */
+  var floors=[].slice.call(document.querySelectorAll('.floor'));
+  var num=document.getElementById('num'),fname=document.getElementById('fname'),arrow=document.getElementById('arrow');
+  var fbs=[].slice.call(document.querySelectorAll('.fb'));
+  var dusk=document.getElementById('dusk'),sun=document.getElementById('sun'),cHi=document.getElementById('cloudsHi'),cSea=document.getElementById('cloudSea'),tint=document.getElementById('cloudTint');
+  var cityF=document.getElementById('cityFar'),cityM=document.getElementById('cityMid'),cityN=document.getElementById('cityNear');
+  var data=[],vh=innerHeight,maxScroll=1,lastY=-1,shown=null,arrowT,intro=true,typed=false,charted=false;
+  var gtLines=[].slice.call(document.querySelectorAll('#gt p')),stage=document.getElementById('stage'),story=document.getElementById('story');
+
+  function measure(){
+    vh=innerHeight;maxScroll=Math.max(1,doc.scrollHeight-vh);
+    var y=scrollY;
+    data=floors.map(function(f){var r=f.getBoundingClientRect();return{el:f,top:r.top+y,h:r.height,floor:+f.dataset.floor,name:f.dataset.name,
+      layers:[].slice.call(f.querySelectorAll('[data-speed]')).map(function(l){return{el:l,s:+l.dataset.speed};}),
+      dl:f.querySelector('.door.l'),dr:f.querySelector('.door.r')};});
+    lastY=-1;
+  }
+  function clamp(v,a,b){return v<a?a:v>b?b:v;}
+  function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+  function label(f){return f>=70?'PH':String(f);}
+
+  function setFloor(f,name){
+    var l=label(f);
+    if(l!==shown){
+      var was=shown;shown=l;num.textContent=l;fname.textContent=name;
+      arrow.classList.add('on');clearTimeout(arrowT);arrowT=setTimeout(function(){arrow.classList.remove('on');},700);
+      var idx=-1;data.forEach(function(d,i){if(label(d.floor)===l)idx=i;});
+      fbs.forEach(function(b,i){b.classList.toggle('lit',i===idx);});
+      if(idx>-1&&was!==null&&soundOn)ding();
+    }
+  }
+
+  function frame(){
+    var y=scrollY;
+    if(y!==lastY){
+      lastY=y;
+      var g=clamp(y/maxScroll,0,1);
+      /* sky */
+      var dk=clamp((g-.35)/.6,0,1);
+      dusk.style.opacity=dk.toFixed(3);
+      sun.style.opacity=clamp((g-.55)/.35,0,1).toFixed(3);
+      tint.style.opacity=(dk*.85).toFixed(3);
+      cityN.style.setProperty('--lit',dk.toFixed(3));
+      if(!RM){
+        sun.style.transform='translate3d(0,'+((1-g)*30).toFixed(1)+'vh,0)';
+        cityF.style.transform='translate3d(0,'+(g*80).toFixed(2)+'vh,0)';
+        cityM.style.transform='translate3d(0,'+(g*110).toFixed(2)+'vh,0)';
+        cityN.style.transform='translate3d(0,'+(g*150).toFixed(2)+'vh,0)';
+        cHi.style.transform='translate3d(0,'+(-40+g*110).toFixed(2)+'vh,0)';
+        cSea.style.transform='translate3d(0,'+(clamp((1-g)/.35,0,1)*70).toFixed(2)+'vh,0)';
+      }else{
+        cityF.style.opacity=cityM.style.opacity=cityN.style.opacity=(1-g).toFixed(3);
+        cSea.style.transform='translate3d(0,'+(g>.8?0:70)+'vh,0)';
+      }
+      var mid=y+vh*.5;
+      /* floors */
+      for(var i=0;i<data.length;i++){
+        var d=data[i],top=d.top-y;
+        if(top<vh*1.2&&top+d.h>-vh*.2){
+          var c=top+d.h/2-vh/2;
+          if(!RM){for(var k=0;k<d.layers.length;k++){d.layers[k].el.style.transform='translate3d(0,'+(c*d.layers[k].s).toFixed(1)+'px,0)';}}
+          if(!RM&&!(i===0&&intro)){
+            var p=ease(clamp((vh*.95-top)/(vh*.55),0,1));
+            d.dl.style.transform='translate3d('+(-p*101).toFixed(2)+'%,0,0)';
+            d.dr.style.transform='translate3d('+(p*101).toFixed(2)+'%,0,0)';
+          }
+        }
+      }
+      /* floor indicator */
+      if(!intro){
+        var cf=data[0].floor,cn=data[0].name;
+        for(var j=0;j<data.length;j++){
+          var a=data[j];
+          if(mid>=a.top){cf=a.floor;cn=a.name;
+            var nx=data[j+1];
+            if(nx){var st=a.top+a.h*.55;if(mid>st){var t=clamp((mid-st)/(nx.top-st),0,1);cf=Math.floor(a.floor+(nx.floor-a.floor)*t);if(t>0.02)cn='GOING UP';if(t>=1){cf=nx.floor;cn=nx.name;}}}
+          }
+        }
+        setFloor(cf,cn);
+      }
+      /* one-shot reveals */
+      if(!typed&&story.getBoundingClientRect().top<vh*.7){typed=true;typeStory();}
+      if(!charted&&stage.getBoundingClientRect().top<vh*.75){charted=true;drawChart();}
+    }
+    requestAnimationFrame(frame);
+  }
+  /* greentext: real char-by-char typing, layout reserved by the hidden remainder */
+  var gtParts=gtLines.map(function(p){var txt=p.textContent;p.textContent='';
+    var t=document.createElement('span'),k=document.createElement('span'),r=document.createElement('span');
+    k.className='k';k.textContent='\u2588';r.className='r';r.textContent=txt;
+    if(RM){t.textContent=txt;r.textContent='';}
+    p.appendChild(t);p.appendChild(k);p.appendChild(r);return{p:p,t:t,r:r,txt:txt};});
+  function typeStory(){
+    if(RM)return;
+    var li=0,ci=0;
+    (function tick(){
+      var L=gtParts[li];if(!L)return;
+      L.p.classList.add('cur');ci+=2;
+      L.t.textContent=L.txt.slice(0,ci);L.r.textContent=L.txt.slice(ci);
+      if(ci>=L.txt.length){if(li<gtParts.length-1)L.p.classList.remove('cur');li++;ci=0;setTimeout(tick,140);}
+      else setTimeout(tick,22);
+    })();
+  }
+
+  function drawChart(){
+    stage.classList.add('play');
+    var line=stage.querySelector('.line');if(RM){line.style.strokeDashoffset=0;return;}
+    var t0=performance.now();
+    (function step(){var t=clamp((performance.now()-t0)/2200,0,1);line.style.strokeDashoffset=(1-ease(t)).toFixed(4);if(t<1)setTimeout(step,16);})();
+  }
+  /* intro: B1 -> 1, lobby doors part */
+  function runIntro(){
+    var l=data[0];
+    if(RM||scrollY>vh*.5){intro=false;lastY=-1;return;}
+    l.dl.style.transform=l.dr.style.transform='translate3d(0,0,0)';
+    setTimeout(function(){
+      intro=false;lastY=-1;
+      var t0=performance.now();
+      (function open(){var p=ease(clamp((performance.now()-t0)/1100,0,1));
+        l.dl.style.transform='translate3d('+(-p*101)+'%,0,0)';l.dr.style.transform='translate3d('+(p*101)+'%,0,0)';
+        if(p<1)requestAnimationFrame(open);})();
+    },650);
+  }
+
+  /* floor buttons */
+  fbs.forEach(function(b){b.addEventListener('click',function(e){
+    var d=data[+b.dataset.go];if(!d)return;e.preventDefault();
+    window.scrollTo({top:Math.max(0,d.top-(parseInt(getComputedStyle(doc).getPropertyValue('--panel-h'))||64)+2),behavior:RM?'auto':'smooth'});
+  });});
+
+  measure();
+  setFloor(-1,'PARKING');num.textContent='B1';shown='B1';
+  runIntro();
+  addEventListener('resize',measure);
+  addEventListener('load',measure);
+  if(window.ResizeObserver){new ResizeObserver(function(){measure();}).observe(document.body);}
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
